@@ -1,30 +1,38 @@
-bool isPalindrome(string s) {
-    int st=0;
-    int ed=s.length()-1;
-
-    while (st<=ed) {
-        if (s[st++] != s[ed--]) return false;
-    }
-
-    return true;
-}
-
-string longestPalinSubstring(string s)
+string longestPalinSubstring(string str)
 {
-    int n = s.length();
-    int maxLength = 0;
-    string longestPalindrome;
+    int n = str.length();
+    int mx = 1; // Variable to store the length of the longest palindromic substring found so far.
+    int start = 0; // Variable to store the starting index of the longest palindromic substring.
 
-    // Generate all possible substrings
-    for (int i = 0; i < n; i++) {
-        for (int j = i; j < n; j++) {
-            string sub = s.substr(i, j - i + 1);
-            if (isPalindrome(sub) && sub.length() > maxLength) {
-                maxLength = sub.length();
-                longestPalindrome = sub;
+    // Iterate over the string, considering each character as the center of the palindrome (odd and even-length palindromes).
+    for (int i = 1; i <= n; i++) {
+        int l = i - 1; // Left pointer for odd-length palindrome (centered at str[i-1]).
+        int r = i; // Right pointer for odd-length palindrome (centered at str[i-1]).
+        
+        // Check for odd-length palindromes.
+        while (l >= 0 && r < n && str[l] == str[r]) {
+            if (r - l + 1 > mx) {
+                mx = r - l + 1;
+                start = l;
             }
+            l--;
+            r++;
+        }
+
+        l = i - 1; // Reset the left pointer for even-length palindrome (centered between str[i-1] and str[i]).
+        r = i + 1; // Reset the right pointer for even-length palindrome (centered between str[i-1] and str[i]).
+        
+        // Check for even-length palindromes.
+        while (l >= 0 && r < n && str[l] == str[r]) {
+            if (r - l + 1 > mx) {
+                mx = r - l + 1;
+                start = l;
+            }
+            l--;
+            r++;
         }
     }
 
-    return longestPalindrome;
+    // Return the longest palindromic substring using substr() function.
+    return str.substr(start, mx);
 }
